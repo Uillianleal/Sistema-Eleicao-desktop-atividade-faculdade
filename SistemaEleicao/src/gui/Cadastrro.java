@@ -814,6 +814,26 @@ public class Cadastrro extends JDialog {
 							st.setInt(2, idChapa);
 							st.execute();
 						}
+						
+						MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017");
+
+						MongoDatabase database = mongoClient.getDatabase("SistemaEleicao");
+
+						MongoCollection<Document> collection = database.getCollection("DocumentoEleicao");
+
+						Document DocumentoEleicao = new Document();
+						DocumentoEleicao.append("nome", sNome);
+						DocumentoEleicao.append("tipo", sTipo);
+						DocumentoEleicao.append("data inicio", new java.sql.Date(dataInicio.getTime()));
+						DocumentoEleicao.append("data final", new java.sql.Date(dataFinal.getTime()));
+
+						DocumentoEleicao.append("Chapa",
+								new Document().append("nome", txtNomeChapa.getText()).append("descricao", textAreaChapa.getText()));
+										
+
+						collection.insertOne(DocumentoEleicao);
+
+						mongoClient.close();
 
 						txtNomeEleicao.setText("");
 						txtTipoEleicao.setText("");
